@@ -84,9 +84,9 @@ setup_bot() {
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
 
     # === INPUT TELEGRAM (VALIDASI DULU) ===
-    echo -e "${purple}Input Bot Token:${neutral}"
+    echo -e "${purple}Input Bot Token${neutral}"
     read -rp "Token: " BOT_TOKEN
-    echo -e "${purple}Input Chat ID:${neutral}"
+    echo -e "${purple}Input Chat ID${neutral}"
     read -rp "Chat ID: " CHAT_ID
 
     echo -e "${yellow}Validasi Telegram Bot...${neutral}"
