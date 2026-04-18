@@ -15,7 +15,7 @@ reset="\e[0m"
 
 # === HEADER ===
 print_header() {
-    echo -e "${green}⚡ ARI-NETWORK v12 :: [API SYSTEM]${neutral}"
+    echo -e "${green}⚡ API-ARI :: [API SYSTEM]${neutral}"
     echo -e "${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${neutral}"
     echo -e "   ⚙️ ${bold_white}Secure${neutral} | ${green}Fast${neutral} | ${purple}Stable${neutral}"
     echo -e "${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${neutral}\n"
@@ -63,7 +63,7 @@ setup_bot() {
     # === DOWNLOAD API BARU ===
     if [ ! -f /usr/bin/api-ari/api.js ]; then
         echo -e "${blue}Download API-ARI...${neutral}"
-        curl -sL "https://raw.githubusercontent.com/arivpnstores/v7/main/bot/api-ari.zip" -o /usr/bin/api-ari.zip
+        curl -sL "https://raw.githubusercontent.com/arivpnstores/api-ari/main/api-ari.zip" -o /usr/bin/api-ari.zip
         cd /usr/bin
         unzip api-ari.zip >/dev/null 2>&1
         rm api-ari.zip*
