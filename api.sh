@@ -78,7 +78,7 @@ setup_bot() {
     NEW_AUTH_KEY=$(openssl rand -hex 3)
     sed -i '/export AUTH_KEY=/d' /etc/profile
     echo "export AUTH_KEY=\"$NEW_AUTH_KEY\"" >> /etc/profile
-    source /etc/profile
+    source /etc/profile >/dev/null 2>&1
 
     SERVER_IP=$(curl -s ipv4.icanhazip.com)
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
