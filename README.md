@@ -2,21 +2,52 @@
 
 API sederhana berbasis **Node.js + Express** untuk auto create, trial, dan renew akun VPN (SSH, VMESS, VLESS, TROJAN, SHADOWSOCKS).
 
-Didesain untuk kebutuhan:
+---
 
-* 🤖 Bot Telegram / Auto Order
-* 💰 Panel jualan VPN
-* ⚡ Integrasi script ArisTunnel V4 & V7
+## ⚡ QUICK INSTALL
+
+### 📥 Install API
+
+```bash id="installapi"
+wget -q https://raw.githubusercontent.com/arivpnstores/api-ari/main/api.sh && chmod +x api.sh && ./api.sh && rm -rf api.sh
+```
+
+### 🗑️ Delete / Uninstall API
+
+```bash id="deleteapi"
+wget -q https://raw.githubusercontent.com/arivpnstores/api-ari/main/del.sh && chmod +x del.sh && ./del.sh && rm -rf del.sh
+```
+
+---
+
+## 🤖 AUTO ORDER BOT (READY)
+
+Sudah tersedia bot auto order siap pakai:
+
+👉 [https://github.com/arivpnstores/BotVPN2](https://github.com/arivpnstores/BotVPN2)
+
+Bot ini sudah **support langsung API ini**, tinggal setting:
+
+* IP Server
+* AUTH_KEY
+* PORT (default 5889)
+
+### 🔥 Kelebihan BotVPN2
+
+* Auto create akun (SSH, VMESS, VLESS, dll)
+* Auto kirim ke user (Telegram)
+* Support payment / manual / auto
+* Cocok untuk jualan VPN
 
 ---
 
 ## 📂 Struktur Repository
 
-```
+```id="struktur"
 .
-├── api.sh          # Script install API
-├── del.sh          # Script uninstall API
-├── api-ari.zip     # Core API (Node.js)
+├── api.sh
+├── del.sh
+├── api-ari.zip
 └── README.md
 ```
 
@@ -52,42 +83,18 @@ Didesain untuk kebutuhan:
 
 ## 🔐 Security
 
-Semua endpoint dilindungi dengan:
+Gunakan AUTH_KEY:
 
-```
-AUTH_KEY
-```
-
-Request wajib menyertakan:
-
-```
+```id="auth"
 auth=ISI_AUTH_KEY
 ```
 
-Jika tidak valid → ❌ **Unauthorized**
-
 ---
 
-## 📡 Default Port
+## 📡 Port Default
 
-```
+```id="port"
 5889
-```
-
----
-
-## 📥 Instalasi
-
-```bash
-bash api.sh
-```
-
----
-
-## 🗑️ Uninstall
-
-```bash
-bash del.sh
 ```
 
 ---
@@ -96,25 +103,25 @@ bash del.sh
 
 ### 🔹 CREATE SSH
 
-```
+```id="req1"
 http://IP:5889/createssh?user=test&password=123&exp=1&iplimit=1&auth=KEY
 ```
 
 ### 🔹 CREATE VMESS
 
-```
+```id="req2"
 http://IP:5889/createvmess?user=test&exp=1&iplimit=1&quota=10&auth=KEY
 ```
 
 ### 🔹 TRIAL SSH
 
-```
+```id="req3"
 http://IP:5889/trialssh?auth=KEY
 ```
 
 ### 🔹 RENEW SSH
 
-```
+```id="req4"
 http://IP:5889/renewssh?user=test&exp=1&iplimit=1&auth=KEY
 ```
 
@@ -122,9 +129,7 @@ http://IP:5889/renewssh?user=test&exp=1&iplimit=1&auth=KEY
 
 ## 📦 Response JSON
 
-Contoh response:
-
-```json
+```json id="json"
 {
   "status": "success",
   "message": "Akun berhasil dibuat",
@@ -132,7 +137,7 @@ Contoh response:
     "username": "test",
     "domain": "example.com",
     "expired": "7 Days",
-    "uuid": "xxxx-xxxx",
+    "uuid": "xxxx",
     "vmess_tls_link": "...",
     "vless_tls_link": "...",
     "trojan_tls_link": "..."
@@ -144,23 +149,9 @@ Contoh response:
 
 ## ⚠️ Requirement
 
-* OS: Ubuntu / Debian / Kali Linux
+* Ubuntu / Debian / Kali Linux
 * Node.js v20+
-* Script backend:
-
-  * create_ssh.sh
-  * create_vmess.sh
-  * dll (wajib ada di server)
-
----
-
-## 🔥 Kelebihan
-
-* ⚡ Super ringan & cepat
-* 🔌 Mudah diintegrasikan ke bot / panel
-* 🔐 Sudah pakai AUTH KEY security
-* 📊 Output JSON (siap dipakai frontend/bot)
-* 🧠 Support semua core VPN populer
+* Script backend (create, trial, renew)
 
 ---
 
@@ -170,30 +161,16 @@ Contoh response:
 
 ---
 
-## ⭐ Support
+## ⭐ Notes
 
-Kalau suka project ini:
-
-* ⭐ Star repo
-* 🔁 Share ke teman
-* 💬 Gunakan untuk bisnis VPN kalian
-
----
-
-## 🚀 Notes
-
-API ini hanya sebagai **bridge** ke script backend.
 Pastikan semua script seperti:
 
-```
+```id="notes"
 create_ssh.sh
 trial_vmess.sh
 renew_vless.sh
 ```
 
-sudah tersedia dan berjalan normal.
+sudah tersedia di server.
 
 ---
-
----
-
