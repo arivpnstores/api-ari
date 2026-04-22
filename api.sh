@@ -74,7 +74,7 @@ setup_bot() {
 
     # === DEPENDENCY ===
     npm list --prefix /usr/bin/api-ari express child_process >/dev/null 2>&1 || \
-    npm install --prefix /usr/bin/api-ari express child_process
+    npm install --prefix /usr/bin/api-ari express child_process >/dev/null 2>&1
 
     # === AUTH KEY ===
     NEW_AUTH_KEY=$(openssl rand -hex 3)
