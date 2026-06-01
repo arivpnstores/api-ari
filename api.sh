@@ -72,37 +72,42 @@ setup_bot() {
 
     # === DEPENDENCY ===
     npm list --prefix /usr/bin/api-ari express child_process >/dev/null 2>&1 || \
-    npm install --prefix /usr/bin/api-ari express child_process >/dev/null 2>&1
+    npm install --prefix /usr/bin/api-ari express child_process
 
     # === AUTH KEY ===
     NEW_AUTH_KEY=$(openssl rand -hex 3)
+    sed -i '/export AUTH_KEY=/d' /etc/profile
+    echo "export AUTH_KEY=\"$NEW_AUTH_KEY\"" >> /etc/profile
+    source /etc/profile >/dev/null 2>&1
+
     SERVER_IP=$(curl -s ipv4.icanhazip.com)
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
 
-        echo -e "${yellow}Sudah pernah run → Input manual${neutral}"
-        echo -e "${purple}Input Bot Token${neutral}"
-        read -rp "Token: " BOT_TOKEN
-        echo -e "${purple}Input Chat ID${neutral}"
-        read -rp "Chat ID: " CHAT_ID
+    # === INPUT TELEGRAM (VALIDASI DULU) ===
+    echo -e "${purple}Input Bot Token:${neutral}"
+    read -rp "Token: " BOT_TOKEN
+    echo -e "${purple}Input Chat ID:${neutral}"
+    read -rp "Chat ID: " CHAT_ID
 
     echo -e "${yellow}Validasi Telegram Bot...${neutral}"
 
+    TEST_MSG="✅ Bot Connected - API ARI"
+
     RESPONSE=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
         -d "chat_id=$CHAT_ID" \
-        -d "text=✅ Bot Connected - API ARI")
+        -d "text=$TEST_MSG")
 
     if echo "$RESPONSE" | grep -q '"ok":true'; then
         echo -e "${green}Telegram Valid ✔${neutral}"
 
-        echo "export KEYAPI=\"$BOT_TOKEN\"" > $CONFIG_FILE
-        echo "export CHATID=\"$CHAT_ID\"" >> $CONFIG_FILE
-
-        grep -q "botapi.conf" /etc/profile || echo "source $CONFIG_FILE" >> /etc/profile
-        source $CONFIG_FILE
+        echo "export KEYAPI=\"$BOT_TOKEN\"" >/etc/botapi.conf
+        echo "export CHATID=\"$CHAT_ID\"" >>/etc/botapi.conf
+        grep -q "botapi.conf" /etc/profile || echo "source /etc/botapi.conf" >> /etc/profile
+        source /etc/botapi.conf
 
     else
         echo -e "${red}Telegram Invalid ❌${neutral}"
-        echo "Cek Token / Chat ID!"
+        echo "Cek Token / Chat ID lu!"
         exit 1
     fi
 
@@ -152,6 +157,7 @@ EOF
 
     chmod +x /usr/bin/apisellvpn
 
+    # Kill port 5889
     CEK_PORT=$(lsof -i:5889 | awk 'NR>1 {print $2}' | sort -u)
     if [[ -n "$CEK_PORT" ]]; then
         echo "Kill port 5889..."
