@@ -83,45 +83,12 @@ setup_bot() {
     SERVER_IP=$(curl -s ipv4.icanhazip.com)
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
 
-    # === INPUT TELEGRAM (VALIDASI DULU) ===
-    echo -e "${purple}Input Bot Token:${neutral}"
-    read -rp "Token: " BOT_TOKEN
-    echo -e "${purple}Input Chat ID:${neutral}"
-    read -rp "Chat ID: " CHAT_ID
-
-    echo -e "${yellow}Validasi Telegram Bot...${neutral}"
-
-    TEST_MSG="✅ Bot Connected - API ARI"
-
-    RESPONSE=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-        -d "chat_id=$CHAT_ID" \
-        -d "text=$TEST_MSG")
-
-    if echo "$RESPONSE" | grep -q '"ok":true'; then
-        echo -e "${green}Telegram Valid ✔${neutral}"
-
-        echo "export KEYAPI=\"$BOT_TOKEN\"" >/etc/botapi.conf
-        echo "export CHATID=\"$CHAT_ID\"" >>/etc/botapi.conf
-        grep -q "botapi.conf" /etc/profile || echo "source /etc/botapi.conf" >> /etc/profile
-        source /etc/botapi.conf
-
-    else
-        echo -e "${red}Telegram Invalid ❌${neutral}"
-        echo "Cek Token / Chat ID lu!"
-        exit 1
-    fi
-
-    # === SEND INFO ===
-    MESSAGE="🚀 *API-ARI Installed*
-🔑 Auth: \`$AUTH_KEY\`
-🌐 IP: \`$SERVER_IP\`
-🌍 Domain: \`$DOMAIN\`"
-
-    curl -s -X POST "https://api.telegram.org/bot$KEYAPI/sendMessage" \
-        -d "chat_id=$CHATID" \
-        -d "text=$MESSAGE" \
-        -d "parse_mode=Markdown" >/dev/null 2>&1
-
+    echo -e "${green}Telegram tidak diperlukan.${neutral}"
+    echo -e "${blue}Informasi instalasi akan ditampilkan langsung di VPS.${neutral}"
+    echo -e "\n${green}🚀 API-ARI Installed${neutral}"
+    echo -e "🔑 Auth: ${bold_white}$AUTH_KEY${neutral}"
+    echo -e "🌐 IP: ${bold_white}$SERVER_IP${neutral}"
+    echo -e "🌍 Domain: ${bold_white}$DOMAIN${neutral}"
     echo -e "${green}Setup selesai!${neutral}"
 }
 
