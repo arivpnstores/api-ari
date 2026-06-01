@@ -12,8 +12,6 @@ purple="\e[38;5;141m"
 bold_white="\e[1;37m"
 reset="\e[0m"
 
-CONFIG_FILE="/etc/botapi.conf"
-
 # === HEADER ===
 print_header() {
     echo -e "${green}⚡ API-ARI :: [API SYSTEM]${neutral}"
@@ -78,28 +76,14 @@ setup_bot() {
 
     # === AUTH KEY ===
     NEW_AUTH_KEY=$(openssl rand -hex 3)
-    sed -i '/export AUTH_KEY=/d' /etc/profile
-    echo "export AUTH_KEY=\"$NEW_AUTH_KEY\"" >> /etc/profile
-    source /etc/profile >/dev/null 2>&1
-
     SERVER_IP=$(curl -s ipv4.icanhazip.com)
     DOMAIN=$(cat /etc/xray/domain 2>/dev/null || echo "No Domain")
 
-    # === TELEGRAM CONFIG ===
-    DEFAULT_BOT_TOKEN="8681894724:AAEH_ZDs98e8rbs9_4_NXlYoDYdf2JMjEKE"
-    DEFAULT_CHAT_ID="1962241851"
-
-    if [ ! -f "$CONFIG_FILE" ]; then
-        echo -e "${green}First run → Auto Telegram${neutral}"
-        BOT_TOKEN="$DEFAULT_BOT_TOKEN"
-        CHAT_ID="$DEFAULT_CHAT_ID"
-    else
         echo -e "${yellow}Sudah pernah run → Input manual${neutral}"
         echo -e "${purple}Input Bot Token${neutral}"
         read -rp "Token: " BOT_TOKEN
         echo -e "${purple}Input Chat ID${neutral}"
         read -rp "Chat ID: " CHAT_ID
-    fi
 
     echo -e "${yellow}Validasi Telegram Bot...${neutral}"
 
